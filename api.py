@@ -1,61 +1,62 @@
 import flask
-from flask import request, jsonify
+from flask import request, jsonify, send_file, make_response
+from flaskr.book_inventory import BookInventory
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
 
-# Create some test data for our catalog in the form of a list of dictionaries.
-books = [
-    {'id': 0,
-     'title': 'A Fire Upon the Deep',
-     'author': 'Vernor Vinge',
-     'first_sentence': 'The coldsleep itself was dreamless.',
-     'year_published': '1992'},
-    {'id': 1,
-     'title': 'The Ones Who Walk Away From Omelas',
-     'author': 'Ursula K. Le Guin',
-     'first_sentence': 'With a clamor of bells that set the swallows soaring, the Festival of Summer came to the city Omelas, bright-towered by the sea.',
-     'published': '1973'},
-    {'id': 2,
-     'title': 'Dhalgren',
-     'author': 'Samuel R. Delany',
-     'first_sentence': 'to wound the autumnal city.',
-     'published': '1975'}
-]
+book_inventory = BookInventory()
 
 
-@app.route('/', methods=['GET'])
-def home():
-    return '''<h1>Distant Reading Archive</h1>
-<p>A prototype API for distant reading of science fiction novels.</p>'''
+@app.route('/api/books', methods=['GET'])
+def api_get_books():
+    return jsonify(book_inventory.get_all_books())
 
 
-@app.route('/api/v1/resources/books/all', methods=['GET'])
-def api_all():
-    return jsonify(books)
+@app.route('/api/books/<book_id>', methods=['GET'])
+def api_get_book(book_id):
+    return jsonify(book_inventory.get_book(book_id))
 
 
-@app.route('/api/v1/resources/books', methods=['GET'])
-def api_id():
-    # Check if an ID was provided as part of the URL.
-    # If ID is provided, assign it to a variable.
-    # If no ID is provided, display an error in the browser.
-    if 'id' in request.args:
-        id = int(request.args['id'])
-    else:
-        return "Error: No id field provided. Please specify an id."
+@app.route('/api/books', methods=['POST'])
+def api_add_book():
+    body = request.get_json()
+    book = book_inventory.add_book(body['author'], body['title'])
+    return jsonify(book), 201
 
-    # Create an empty list for our results
-    results = []
 
-    # Loop through the data and match results that fit the requested ID.
-    # IDs are unique, but other fields might return many results
-    for book in books:
-        if book['id'] == id:
-            results.append(book)
+@app.route('/api/books/<book_id>', methods=['PUT'])
+def api_update_book(book_id):
+    if not book_inventory.has_book(book_id):
+        return 'Book with id {} not found'.format(book_id), 404
+    body = request.get_json()
+    book = book_inventory.update_book(book_id, body['author'], body['title'])
+    return jsonify(book), 201
 
-    # Use the jsonify function from Flask to convert our list of
-    # Python dictionaries to the JSON format.
-    return jsonify(results)
 
-app.run()
+@app.route('/api/books/<book_id>', methods=['DELETE'])
+def api_delete_book(book_id):
+    if not book_inventory.has_book(book_id):
+        return 'Book with id {} not found'.format(book_id), 404
+    book_inventory.delete_book(book_id)
+    return "", 204
+
+
+@app.route('/')
+def send_index():
+    return send_file('static/index.html')
+
+
+@app.route('/terms.html')
+def send_static(path):
+    return send_file('static/terms.html')
+
+
+@app.route('/openapi.yaml')
+def send_openapi():
+    response = make_response(send_file('static/openapi.yaml'))
+    response.headers['content-type'] = 'text/yaml; charset=UTF-8'
+    return response
+
+
+app.run(port=3100)

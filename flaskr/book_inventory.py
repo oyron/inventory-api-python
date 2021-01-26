@@ -1,6 +1,8 @@
+from json import JSONEncoder
+
 class BookInventory:
 
-    class Book:
+    class Book():
         def __init__(self, uid, title, author):
             self.uid = uid
             self.title = title
@@ -37,7 +39,7 @@ class BookInventory:
         self.books.pop(str(book_id))
 
     def _add_book(self, book_id, title, author):
-        book = BookInventory.Book(int(book_id), title, author)
+        book = {'id': book_id, 'title': title, 'author': author}
         self.books[str(book_id)] = book
         return book
 
