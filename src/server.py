@@ -1,8 +1,10 @@
 import os
 from flask import Flask, request, jsonify, send_file, make_response
 from flaskr.book_inventory import BookInventory
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app, resources={"*": {"origins": ['http://gui-swagger-editor-single.playground.radix.equinor.com', 'https://gui-swagger-editor-single.playground.radix.equinor.com', 'http://localhost:8080']}})
 app.config["DEBUG"] = True
 
 book_inventory = BookInventory()
