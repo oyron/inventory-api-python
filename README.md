@@ -1,2 +1,3 @@
-# inventory-api-python
+# Inventory API (Python version)
+
 Python version of Inventory Demo API
