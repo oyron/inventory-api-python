@@ -1,8 +1,8 @@
-import flask
-from flask import request, jsonify, send_file, make_response
+import os
+from flask import Flask, request, jsonify, send_file, make_response
 from flaskr.book_inventory import BookInventory
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 app.config["DEBUG"] = True
 
 book_inventory = BookInventory()
@@ -58,5 +58,5 @@ def send_openapi():
     response.headers['content-type'] = 'text/yaml; charset=UTF-8'
     return response
 
-
-app.run(port=3100)
+port = int(os.environ.get("PORT", 3100))
+app.run(host="0.0.0.0", port=port)
