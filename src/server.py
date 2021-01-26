@@ -58,5 +58,6 @@ def send_openapi():
     response.headers['content-type'] = 'text/yaml; charset=UTF-8'
     return response
 
+
 port = int(os.environ.get("PORT", 3100))
 app.run(host="0.0.0.0", port=port)
