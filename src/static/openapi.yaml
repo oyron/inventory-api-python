@@ -168,5 +168,5 @@ components:
           type: string
   
 externalDocs:
-  description: API documentation
-  url: 'https://github.com/oyron/inventory-api'
+  description: GitHub repository
+  url: 'https://github.com/oyron/inventory-api-python'
