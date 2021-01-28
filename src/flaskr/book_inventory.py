@@ -39,7 +39,7 @@ class BookInventory:
         self.books.pop(str(book_id))
 
     def _add_book(self, book_id, title, author):
-        book = {'id': book_id, 'title': title, 'author': author}
+        book = {'id': int(book_id), 'title': title, 'author': author}
         self.books[str(book_id)] = book
         return book
 

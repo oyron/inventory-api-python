@@ -16,15 +16,15 @@ class TestBookInventory(unittest.TestCase):
         book_inventory = BookInventory()
         book = book_inventory.get_book("1")
         self.assertIsNotNone(book)
-        self.assertTrue(type(book.uid) == int)
-        self.assertTrue(type(book.author) == str)
+        self.assertTrue(type(book['id']) == int)
+        self.assertTrue(type(book['author']) == str)
 
     def test_get_book_by_numeric_id(self):
         book_inventory = BookInventory()
         book = book_inventory.get_book(1)
         self.assertIsNotNone(book)
-        self.assertTrue(type(book.uid) == int)
-        self.assertTrue(type(book.author) == str)
+        self.assertTrue(type(book['id']) == int)
+        self.assertTrue(type(book['author']) == str)
 
     def test_add_book(self):
         title = "The Statoil Book"
@@ -32,8 +32,8 @@ class TestBookInventory(unittest.TestCase):
         book_inventory = BookInventory()
         book = book_inventory.add_book(title, author)
         self.assertIsNotNone(book)
-        self.assertEqual(book.title, title)
-        self.assertEqual(book.author, author)
+        self.assertEqual(book['title'], title)
+        self.assertEqual(book['author'], author)
 
     def test_update_book_by_numeric_id(self):
         title = "The Statoil Book"
@@ -42,9 +42,9 @@ class TestBookInventory(unittest.TestCase):
         book_inventory = BookInventory()
         book = book_inventory.update_book(book_id, title, author)
         self.assertIsNotNone(book)
-        self.assertEqual(book.title, title)
-        self.assertEqual(book.author, author)
-        self.assertEqual(book.uid, book_id)
+        self.assertEqual(book['title'], title)
+        self.assertEqual(book['author'], author)
+        self.assertEqual(book['id'], book_id)
 
     def test_update_book_by_string_id(self):
         title = "The Statoil Book"
@@ -53,9 +53,9 @@ class TestBookInventory(unittest.TestCase):
         book_inventory = BookInventory()
         book = book_inventory.update_book(str(book_id), title, author)
         self.assertIsNotNone(book)
-        self.assertEqual(book.title, title)
-        self.assertEqual(book.author, author)
-        self.assertEqual(book.uid, book_id)
+        self.assertEqual(book['title'], title)
+        self.assertEqual(book['author'], author)
+        self.assertEqual(book['id'], book_id)
 
     def test_delete_book_by_string_id(self):
         book_id = 1
